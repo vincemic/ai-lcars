@@ -1,0 +1,74 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e7]: USS ENTERPRISE NCC-1701-D
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11] [cursor=pointer]: NAVIGATION
+      - generic [ref=e12] [cursor=pointer]: SENSORS
+      - generic [ref=e13] [cursor=pointer]: TACTICAL
+      - generic [ref=e14] [cursor=pointer]: ENGINEERING
+      - generic [ref=e15] [cursor=pointer]: MEDICAL
+      - generic [ref=e16] [cursor=pointer]: SCIENCE
+      - generic [ref=e17] [cursor=pointer]: COMMUNICATIONS
+      - generic [ref=e19]:
+        - text: STARDATE
+        - generic [ref=e20]: "47457.2"
+    - generic [ref=e22]:
+      - generic [ref=e24]: BRIDGE OPERATIONS STATUS
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: WARP CORE
+          - generic [ref=e29]: OPTIMAL
+        - generic [ref=e30]:
+          - generic [ref=e31]: SHIELDS
+          - generic [ref=e33]: 100%
+        - generic [ref=e34]:
+          - generic [ref=e35]: LIFE SUPPORT
+          - generic [ref=e37]: NOMINAL
+        - generic [ref=e38]:
+          - generic [ref=e39]: IMPULSE ENGINES
+          - generic [ref=e41]: STANDBY
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - heading "SENSOR READINGS" [level=3] [ref=e44]
+          - generic [ref=e45]:
+            - generic [ref=e46]: "Temperature:"
+            - generic [ref=e47]: 21°C
+          - generic [ref=e48]:
+            - generic [ref=e49]: "Hull Integrity:"
+            - generic [ref=e50]: 100%
+          - generic [ref=e51]:
+            - generic [ref=e52]: "Power Levels:"
+            - generic [ref=e53]: 98%
+        - generic [ref=e54]:
+          - heading "CREW STATUS" [level=3] [ref=e55]
+          - generic [ref=e56]:
+            - generic [ref=e57]: "Personnel:"
+            - generic [ref=e58]: "1014"
+          - generic [ref=e59]:
+            - generic [ref=e60]: "On Duty:"
+            - generic [ref=e61]: "147"
+          - generic [ref=e62]:
+            - generic [ref=e63]: "Medical:"
+            - generic [ref=e64]: NOMINAL
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]: WARP SPEED
+        - generic [ref=e70]: "0"
+      - generic [ref=e71]:
+        - generic [ref=e72]: ALERTS
+        - generic [ref=e73]: SYSTEM NOMINAL
+        - generic [ref=e74]: ROUTINE MAINTENANCE DUE
+      - generic [ref=e75]:
+        - generic [ref=e76]: CURRENT TIME
+        - generic [ref=e77]: 20:55:00
+        - generic [ref=e78]: 2025.08.27
+  - generic [ref=e81]:
+    - generic [ref=e82]: COMPUTER ACCESS
+    - generic [ref=e83]: "|"
+    - generic [ref=e84]: LEVEL 10
+    - generic [ref=e85]: "|"
+    - generic [ref=e86]: AUTHORIZATION REQUIRED
+```
