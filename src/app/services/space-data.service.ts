@@ -109,11 +109,15 @@ export class SpaceDataService {
   }
 
   private fetchISSPosition(): Observable<ISSPosition | null> {
-    return this.http.get<any>('http://api.open-notify.org/iss-now.json').pipe(
-      catchError(() => of(null)),
+    return this.http.get<any>('https://api.open-notify.org/iss-now.json').pipe(
+      catchError((error) => {
+        console.error('ISS position API error:', error);
+        return of(null);
+      }),
       switchMap(response => {
         if (!response) return of(null);
         
+        console.log('ISS position API response:', response);
         return of({
           latitude: parseFloat(response.iss_position.latitude),
           longitude: parseFloat(response.iss_position.longitude),
@@ -125,9 +129,15 @@ export class SpaceDataService {
   }
 
   private fetchAstronauts(): Observable<Astronaut[]> {
-    return this.http.get<any>('http://api.open-notify.org/astros.json').pipe(
-      catchError(() => of({ people: [] })),
-      switchMap(response => of(response.people || []))
+    return this.http.get<any>('https://api.open-notify.org/astros.json').pipe(
+      catchError((error) => {
+        console.error('Astronauts API error:', error);
+        return of({ people: [] });
+      }),
+      switchMap(response => {
+        console.log('Astronauts API response:', response);
+        return of(response.people || []);
+      })
     );
   }
 
