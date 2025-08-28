@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, interval, switchMap, catchError, of } from 'rxjs';
+import { GeolocationService } from './geolocation.service';
 
 export interface WeatherData {
   temperature: number;
@@ -35,6 +36,7 @@ export interface EarthquakeData {
 })
 export class EnvironmentalService {
   private http = inject(HttpClient);
+  private geolocationService = inject(GeolocationService);
   
   private weather$ = new BehaviorSubject<WeatherData | null>(null);
   private airQuality$ = new BehaviorSubject<AirQuality | null>(null);
@@ -95,23 +97,47 @@ export class EnvironmentalService {
   }
 
   private fetchWeather(): Observable<WeatherData | null> {
-    // Using OpenWeatherMap's free tier (you'll need to get an API key)
-    // For demo purposes, we'll use a mock implementation
-    const mockWeather: WeatherData = {
-      temperature: Math.round(Math.random() * 30 + 10), // 10-40°C
-      humidity: Math.round(Math.random() * 60 + 30), // 30-90%
-      pressure: Math.round(Math.random() * 50 + 1000), // 1000-1050 hPa
-      windSpeed: Math.round(Math.random() * 20 + 5), // 5-25 km/h
-      windDirection: Math.round(Math.random() * 360), // 0-360°
-      description: ['Clear', 'Partly Cloudy', 'Overcast', 'Rain'][Math.floor(Math.random() * 4)],
-      location: 'Starfleet Academy, San Francisco',
-      icon: 'clear-day'
-    };
+    const location = this.geolocationService.getCurrentLocation();
+    
+    if (location) {
+      // Use user's coordinates for weather data
+      const lat = location.latitude;
+      const lon = location.longitude;
+      
+      // Try OpenWeatherMap API (you'll need a real API key for production)
+      // For demo, we'll use location-aware mock data
+      const mockWeather: WeatherData = {
+        temperature: Math.round(Math.random() * 30 + 10), // 10-40°C
+        humidity: Math.round(Math.random() * 60 + 30), // 30-90%
+        pressure: Math.round(Math.random() * 50 + 1000), // 1000-1050 hPa
+        windSpeed: Math.round(Math.random() * 20 + 5), // 5-25 km/h
+        windDirection: Math.round(Math.random() * 360), // 0-360°
+        description: ['Clear', 'Partly Cloudy', 'Overcast', 'Rain'][Math.floor(Math.random() * 4)],
+        location: `${location.city}, ${location.region}`,
+        icon: 'clear-day'
+      };
 
-    return of(mockWeather);
+      return of(mockWeather);
+    } else {
+      // Fallback weather data when location is not available
+      const mockWeather: WeatherData = {
+        temperature: Math.round(Math.random() * 30 + 10),
+        humidity: Math.round(Math.random() * 60 + 30),
+        pressure: Math.round(Math.random() * 50 + 1000),
+        windSpeed: Math.round(Math.random() * 20 + 5),
+        windDirection: Math.round(Math.random() * 360),
+        description: ['Clear', 'Partly Cloudy', 'Overcast', 'Rain'][Math.floor(Math.random() * 4)],
+        location: 'Starfleet Academy, San Francisco',
+        icon: 'clear-day'
+      };
+
+      return of(mockWeather);
+    }
   }
 
   private fetchAirQuality(): Observable<AirQuality | null> {
+    const location = this.geolocationService.getCurrentLocation();
+    
     // Mock air quality data (in production, use real API like World Air Quality Index)
     const aqi = Math.round(Math.random() * 150 + 25); // 25-175
     const status = aqi < 50 ? 'Good' : aqi < 100 ? 'Moderate' : aqi < 150 ? 'Unhealthy for Sensitive' : 'Unhealthy';
@@ -121,7 +147,7 @@ export class EnvironmentalService {
       pm25: Math.round(Math.random() * 50 + 10),
       pm10: Math.round(Math.random() * 80 + 20),
       status,
-      location: 'San Francisco Bay Area',
+      location: location ? `${location.city}, ${location.region}` : 'Location Unknown',
       timestamp: new Date().toISOString()
     };
 

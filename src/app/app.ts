@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { SpaceDataService, ISSPosition, Astronaut, SpaceXLaunch } from './services/space-data.service';
 import { EnvironmentalService, WeatherData, AirQuality, EarthquakeData } from './services/environmental.service';
 import { GlobalDataService, FlightData, NewsItem, EconomicIndicator, CryptoCurrency } from './services/global-data.service';
+import { GeolocationService, LocationData } from './services/geolocation.service';
 
 interface Alert {
   message: string;
@@ -21,8 +22,12 @@ export class App implements OnInit {
   private spaceDataService = inject(SpaceDataService);
   private environmentalService = inject(EnvironmentalService);
   private globalDataService = inject(GlobalDataService);
+  private geolocationService = inject(GeolocationService);
 
   protected readonly title = signal('USS Enterprise LCARS');
+  
+  // Location data signal
+  userLocation = signal<LocationData | null>(null);
   
   // Real-time data signals
   issPosition = signal<ISSPosition | null>(null);
@@ -59,6 +64,11 @@ export class App implements OnInit {
   ngOnInit() {
     // Subscribe to real-time data streams
     this.subscribeToDataStreams();
+    
+    // Subscribe to location data
+    this.geolocationService.getLocation().subscribe(location => {
+      this.userLocation.set(location);
+    });
     
     // Update time every second
     setInterval(() => {

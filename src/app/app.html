@@ -148,6 +148,41 @@
           <div class="navigation-section">
             <div class="data-grid">
               <div class="data-panel">
+                <h3>CURRENT LOCATION</h3>
+                @if (userLocation()) {
+                  <div class="data-line">
+                    <span>Location:</span>
+                    <span class="data-value">{{ userLocation()!.city }}, {{ userLocation()!.region }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Country:</span>
+                    <span class="data-value">{{ userLocation()!.country }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Coordinates:</span>
+                    <span class="data-value">{{ formatCoordinate(userLocation()!.latitude, true) }}, {{ formatCoordinate(userLocation()!.longitude, false) }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>IP Address:</span>
+                    <span class="data-value">{{ userLocation()!.ip }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>ISP:</span>
+                    <span class="data-value">{{ userLocation()!.isp }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Source:</span>
+                    <span class="data-value">{{ userLocation()!.source.toUpperCase() }}</span>
+                  </div>
+                } @else {
+                  <div class="data-line">
+                    <span>Status:</span>
+                    <span class="data-value">Acquiring location...</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
                 <h3>NEARBY AIRCRAFT</h3>
                 @for (flight of nearbyFlights().slice(0, 5); track flight.callsign) {
                   <div class="data-line">

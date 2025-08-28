@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, interval, switchMap, catchError, of, map } from 'rxjs';
+import { GeolocationService } from './geolocation.service';
 
 export interface FlightData {
   callsign: string;
@@ -41,6 +42,7 @@ export interface CryptoCurrency {
 })
 export class GlobalDataService {
   private http = inject(HttpClient);
+  private geolocationService = inject(GeolocationService);
   
   private flights$ = new BehaviorSubject<FlightData[]>([]);
   private news$ = new BehaviorSubject<NewsItem[]>([]);
@@ -100,16 +102,19 @@ export class GlobalDataService {
   }
 
   private fetchNearbyFlights(): Observable<FlightData[]> {
+    // Get user's location bounds for nearby flights
+    const bounds = this.geolocationService.getLocationBounds(150); // 150km radius
+    
+    if (!bounds) {
+      // If no location available, use default area (San Francisco)
+      return this.fetchFlightsForBounds(37.0, 38.5, -123.0, -121.5);
+    }
+
+    return this.fetchFlightsForBounds(bounds.latMin, bounds.latMax, bounds.lonMin, bounds.lonMax);
+  }
+
+  private fetchFlightsForBounds(latMin: number, latMax: number, lonMin: number, lonMax: number): Observable<FlightData[]> {
     // Real flight data using OpenSky Network API
-    // This API provides real-time aircraft positions worldwide
-    // For nearby flights, we'll query a bounding box around a location
-    
-    // Example coordinates for San Francisco Bay Area
-    const latMin = 37.0; // Southern boundary
-    const latMax = 38.5; // Northern boundary  
-    const lonMin = -123.0; // Western boundary
-    const lonMax = -121.5; // Eastern boundary
-    
     const url = `https://opensky-network.org/api/states/all?lamin=${latMin}&lomin=${lonMin}&lamax=${latMax}&lomax=${lonMax}`;
     
     return this.http.get<any>(url).pipe(
