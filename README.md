@@ -1,44 +1,79 @@
 # Star Trek LCARS Dashboard
 
-A stunning recreation of the iconic Star Trek: The Next Generation LCARS (Library Computer Access/Retrieval System) interface built with Angular 17+.
+A stunning recreation of the iconic Star Trek: The Next Generation LCARS (Library Computer Access/Retrieval System) interface built with Angular 17+. This fully functional dashboard displays real-time data from space, environmental, and global sources, creating an immersive Star Trek bridge experience.
 
 ![LCARS Dashboard Preview](https://via.placeholder.com/800x400/000000/FF9900?text=USS+ENTERPRISE+LCARS+DASHBOARD)
 
 ## 🚀 Features
+
+### Core LCARS Experience
 
 - **Authentic LCARS Design**: Faithful recreation of the TNG-era computer interface
 - **Real-time Dashboard**: Live ship status monitoring and system displays
 - **Interactive Controls**: Functional navigation panels and warp speed controls
 - **Dynamic Data**: Animated status indicators with real-time updates
 - **Responsive Design**: Optimized for modern devices and screen sizes
-- **Star Trek Immersion**: Complete with stardate, ship status, and crew information
+
+### Real-Time Data Integration
+
+- **🛰️ Space Operations**: Live ISS tracking, astronaut monitoring, and SpaceX launch schedules
+- **🌍 Environmental Monitoring**: Weather data, air quality, and earthquake tracking
+- **✈️ Aircraft Tracking**: Real-time nearby aircraft using ADS-B technology via OpenSky Network
+- **📍 Location Services**: IP-based geolocation with GPS fallback and reverse geocoding
+- **📈 Economic Data**: Stock market indices, economic indicators, and currency monitoring
+- **🚀 Mission Control**: Comprehensive space data with mock fallback systems
+
+### Technical Excellence
+
+- **Comprehensive Testing**: 59 Playwright E2E tests across 9 test suites
+- **CI/CD Pipeline**: GitHub Actions integration for automated testing
+- **Modern Architecture**: Angular signals, standalone components, and reactive programming
+- **Error Handling**: Robust fallback systems for offline functionality
+- **Performance Optimized**: Efficient data streaming with configurable update intervals
+
+## 🌐 Live Data Sources
+
+The dashboard integrates with multiple free APIs:
+
+- **NASA APIs**: ISS position, astronaut data, solar system information
+- **SpaceX API**: Launch schedules and mission data
+- **OpenSky Network**: Real-time aircraft tracking via ADS-B
+- **Weather APIs**: Current conditions and environmental data
+- **USGS**: Earthquake monitoring and geological data
+- **Geolocation Services**: IP-based location detection with reverse geocoding
 
 ## 🛸 Live Demo
 
-Visit the live demo: [Add your GitHub Pages URL here]
+Visit the live demo: [GitHub Pages URL]
 
 ## 🔧 Technologies Used
 
 - **Angular 17+**: Modern framework with standalone components
-- **TypeScript**: Type-safe development
-- **SCSS**: Advanced styling with LCARS color scheme
-- **Angular Signals**: Reactive state management
+- **TypeScript**: Type-safe development with strict typing
+- **SCSS**: Advanced styling with authentic LCARS color scheme
+- **Angular Signals**: Reactive state management for real-time data
+- **RxJS Observables**: Efficient data streaming and updates
+- **Playwright**: Comprehensive E2E testing framework
+- **GitHub Actions**: Automated CI/CD pipeline
 - **Orbitron Font**: Futuristic typography matching LCARS aesthetic
 
 ## 🏗️ Installation & Setup
 
 1. **Clone the repository**
+
    ```bash
-   git clone https://github.com/YOUR_USERNAME/star-trek-lcars-dashboard.git
-   cd star-trek-lcars-dashboard
+   git clone https://github.com/vincemic/ai-lcars.git
+   cd ai-lcars
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start the development server**
+
    ```bash
    npm start
    ```
@@ -50,51 +85,111 @@ Visit the live demo: [Add your GitHub Pages URL here]
 
 The LCARS dashboard simulates the bridge computer interface of the USS Enterprise NCC-1701-D:
 
-- **Navigation Panel**: Click department buttons (Navigation, Sensors, Tactical, etc.)
-- **Status Monitoring**: View real-time ship systems status
-- **Crew Information**: Monitor personnel and duty assignments
-- **System Controls**: Observe warp speed and ship operations
-- **Alerts**: Monitor system alerts and status changes
+### Navigation Sections
+
+- **🚀 SPACE**: ISS tracking, astronaut monitoring, SpaceX launches, solar data
+- **🌍 ENVIRONMENT**: Weather conditions, air quality, earthquake monitoring
+- **📍 NAVIGATION**: Location services, nearby aircraft tracking, GPS coordinates
+- **📡 COMMUNICATIONS**: Communication systems and network status
+- **📈 ECONOMICS**: Stock market indices, economic indicators, currency values
+- **⚙️ ENGINEERING**: Ship systems, warp core status, engineering reports
+- **🏥 MEDICAL**: Crew health monitoring and medical bay status
+
+### Interactive Features
+
+- **Real-time Updates**: All data refreshes automatically at optimal intervals
+- **Location Awareness**: Services adapt based on your current location
+- **Offline Capability**: Mock data fallback when external APIs are unavailable
+- **Multi-device Support**: Responsive design works on desktop, tablet, and mobile
 
 ## 📁 Project Structure
 
-```
+```text
 src/
 ├── app/
-│   ├── app.ts              # Main component with dashboard logic
-│   ├── app.html            # LCARS interface template
-│   └── app.scss            # LCARS styling and animations
-├── styles.scss             # Global LCARS theme
-└── index.html              # Application shell
+│   ├── services/
+│   │   ├── space-data.service.ts      # ISS, astronauts, SpaceX data
+│   │   ├── environmental.service.ts   # Weather, air quality, earthquakes
+│   │   ├── global-data.service.ts     # Aircraft, news, economics, crypto
+│   │   └── geolocation.service.ts     # IP/GPS location services
+│   ├── app.ts                         # Main component with data integration
+│   ├── app.html                       # LCARS interface template
+│   ├── app.scss                       # LCARS styling and animations
+│   └── app.config.ts                  # HttpClient and app configuration
+├── styles.scss                        # Global LCARS theme
+└── index.html                         # Application shell
 ```
+
+## 🧪 Testing
+
+### Run E2E Tests
+
+```bash
+npm run e2e
+```
+
+### Run Unit Tests
+
+```bash
+npm test
+```
+
+### Test Coverage
+
+- **59 total tests** across 9 test suites
+- **Complete functionality coverage** including all data services
+- **Page Object Model** for maintainable test structure
+- **Multi-browser testing** (Chromium, WebKit, Mobile)
+- **Accessibility testing** for screen reader compatibility
+- **Performance testing** with realistic expectations
 
 ## 🎨 LCARS Color Scheme
 
 The project uses the authentic LCARS color palette:
+
 - **Orange**: `#FF9900` (Primary interface elements)
 - **Blue**: `#9999FF` (Secondary controls)
 - **Red**: `#CC6666` (Alerts and warnings)
 - **Purple**: `#CC99CC` (System indicators)
 - **Teal**: `#99CCCC` (Data displays)
+- **Black**: `#000000` (Background)
 
 ## 🚀 Build & Deploy
 
 ### Development Build
+
 ```bash
 npm run build
 ```
 
 ### Production Build
+
 ```bash
-npm run build --prod
+npm run build --configuration production
 ```
 
 ### Deploy to GitHub Pages
+
 ```bash
 npm install -g angular-cli-ghpages
-ng build --prod --base-href "/your-repo-name/"
+ng build --configuration production --base-href "/ai-lcars/"
 npx angular-cli-ghpages --dir=dist/ai-lcars
 ```
+
+## 📡 API Documentation
+
+### Aircraft Tracking
+
+The dashboard uses ADS-B (Automatic Dependent Surveillance-Broadcast) technology via the OpenSky Network API to track nearby aircraft in real-time. See [docs/AIRCRAFT_TRACKING.md](docs/AIRCRAFT_TRACKING.md) for detailed technical information.
+
+### Data Services
+
+All data services implement robust error handling and fallback mechanisms:
+
+- **Automatic retries** for failed API calls
+- **Mock data generation** when external services are unavailable
+- **HTTPS enforcement** for security compliance
+- **Rate limiting** to respect API quotas
 
 ## 📱 Browser Support
 
@@ -102,14 +197,25 @@ npx angular-cli-ghpages --dir=dist/ai-lcars
 - Firefox 88+
 - Safari 14+
 - Edge 90+
+- Mobile Chrome/Safari (responsive design)
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes with appropriate tests
+4. Run the test suite (`npm test && npm run e2e`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Development Guidelines
+
+- Follow Angular best practices with standalone components
+- Use TypeScript strict mode and proper typing
+- Write tests for new functionality
+- Maintain the authentic LCARS aesthetic
+- Ensure all data services have fallback mechanisms
 
 ## 📄 License
 
@@ -117,9 +223,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🖖 Acknowledgments
 
-- Inspired by the Star Trek: The Next Generation LCARS interface
-- Built with modern web technologies for the 24th century
-- "Make it so!" - Captain Jean-Luc Picard
+- Inspired by the Star Trek: The Next Generation LCARS interface design
+- NASA and SpaceX for providing free access to space data APIs
+- OpenSky Network for real-time aircraft tracking capabilities
+- The Angular team for the excellent framework and tools
+- Star Trek creators for the vision of 24th-century computing
 
 ## 🌟 Star Trek Quote
 
@@ -127,14 +235,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Live long and prosper! 🖖**
+Live long and prosper! 🖖
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+"Make it so!" - Captain Jean-Luc Picard
