@@ -23,7 +23,7 @@ This project showcases the incredible power of AI-assisted development, where na
 
 A stunning recreation of the iconic Star Trek: The Next Generation LCARS (Library Computer Access/Retrieval System) interface built with Angular 17+. This fully functional dashboard displays real-time data from space, environmental, and global sources, creating an immersive Star Trek bridge experience.
 
-![LCARS Dashboard Preview](https://via.placeholder.com/800x400/000000/FF9900?text=USS+ENTERPRISE+LCARS+DASHBOARD)
+![LCARS Dashboard Preview](docs/images/lcars-dashboard-preview.png)
 
 ## 🚀 Features
 
