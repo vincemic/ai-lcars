@@ -13,6 +13,8 @@ export class LCARSPage {
   readonly activeNavigationButton: Locator;
   readonly stardateDisplay: Locator;
   readonly stardateValue: Locator;
+  readonly issPositionDisplay: Locator;
+  readonly issCoordinates: Locator;
   
   // Status display
   readonly statusScreen: Locator;
@@ -48,6 +50,8 @@ export class LCARSPage {
     this.activeNavigationButton = page.locator('.lcars-button.active');
     this.stardateDisplay = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' });
     this.stardateValue = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' }).locator('.lcars-data');
+    this.issPositionDisplay = page.locator('.lcars-text-display').filter({ hasText: 'ISS POSITION' });
+    this.issCoordinates = page.locator('.lcars-text-display').filter({ hasText: 'ISS POSITION' }).locator('.lcars-data');
     
     // Status display
     this.statusScreen = page.locator('.lcars-screen');
@@ -153,5 +157,57 @@ export class LCARSPage {
       { timeout: timeoutMs }
     );
     return this.getCurrentTime();
+  }
+
+  async hasISSPosition(): Promise<boolean> {
+    return await this.issPositionDisplay.count() > 0;
+  }
+
+  async getISSCoordinates(): Promise<string[]> {
+    if (await this.hasISSPosition()) {
+      const coords = await this.issCoordinates.all();
+      const coordinates: string[] = [];
+      for (const coord of coords) {
+        const text = await coord.textContent();
+        if (text) coordinates.push(text);
+      }
+      return coordinates;
+    }
+    return [];
+  }
+
+  async isISSTrackingActive(): Promise<boolean> {
+    const acquiringSignal = this.page.locator('text=Acquiring signal...');
+    const hasPosition = await this.hasISSPosition();
+    const isAcquiring = await acquiringSignal.count() > 0;
+    return hasPosition || isAcquiring;
+  }
+
+  // Economics section helpers
+  async navigateToEconomics(): Promise<void> {
+    await this.page.locator('.lcars-button').filter({ hasText: 'ECONOMICS' }).click();
+  }
+
+  async isEconomicsHeaderVisible(): Promise<boolean> {
+    try {
+      await this.page.locator('.lcars-screen-header').filter({ hasText: 'ECONOMICS OPERATIONS STATUS' }).waitFor({ timeout: 3000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async hasStockIndices(): Promise<boolean> {
+    try {
+      await this.page.locator('h3').filter({ hasText: 'STOCK INDICES' }).waitFor({ timeout: 3000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async getStockData(): Promise<string | null> {
+    const stockSection = this.page.locator('h3').filter({ hasText: 'STOCK INDICES' }).locator('..');
+    return await stockSection.textContent();
   }
 }

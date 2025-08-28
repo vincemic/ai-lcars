@@ -67,7 +67,7 @@ export class App implements OnInit {
     this.subscribeToDataStreams();
     
     // Subscribe to location data
-    this.geolocationService.getLocation().subscribe(location => {
+    this.geolocationService.getLocation().subscribe((location: LocationData | null) => {
       this.userLocation.set(location);
     });
     
@@ -92,9 +92,11 @@ export class App implements OnInit {
   private subscribeToDataStreams() {
     // Space data subscriptions
     this.spaceDataService.getISSPosition().subscribe(position => {
+      console.log('Received ISS position in component:', position);
       this.issPosition.set(position);
       if (position) {
         this.updateAlert('ISS Position Updated', 'low');
+        console.log('ISS position signal set:', this.issPosition());
       }
     });
 
