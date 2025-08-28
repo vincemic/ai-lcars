@@ -210,4 +210,25 @@ export class LCARSPage {
     const stockSection = this.page.locator('h3').filter({ hasText: 'STOCK INDICES' }).locator('..');
     return await stockSection.textContent();
   }
+
+  // Audio functionality helpers
+  async toggleAudio(): Promise<void> {
+    await this.page.locator('.audio-toggle').click();
+  }
+
+  async isAudioEnabled(): Promise<boolean> {
+    const audioButton = this.page.locator('.audio-toggle');
+    const buttonText = await audioButton.textContent();
+    return buttonText?.includes('AUDIO ON') || false;
+  }
+
+  async setWarpSpeed(speed: number): Promise<void> {
+    const slider = this.page.locator('.warp-slider-input');
+    await slider.fill(speed.toString());
+  }
+
+  async getCurrentWarpSpeed(): Promise<number> {
+    const valueText = await this.page.locator('.slider-value').textContent();
+    return parseInt(valueText || '0');
+  }
 }

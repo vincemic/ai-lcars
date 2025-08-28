@@ -262,6 +262,40 @@ body {
       position: relative;
       margin-bottom: 10px;
       
+      .warp-slider-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        outline: none;
+        z-index: 2;
+        
+        &::-webkit-slider-thumb {
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: $lcars-purple;
+          cursor: pointer;
+          opacity: 0;
+        }
+        
+        &::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: $lcars-purple;
+          cursor: pointer;
+          border: none;
+          opacity: 0;
+        }
+      }
+      
       .slider-thumb {
         position: absolute;
         top: 5px;
@@ -270,6 +304,8 @@ body {
         background: $lcars-purple;
         border-radius: 50%;
         box-shadow: 0 0 10px $lcars-purple;
+        pointer-events: none;
+        transition: left 0.2s ease;
       }
     }
     
@@ -277,6 +313,31 @@ body {
       text-align: center;
       font-weight: 700;
       color: $lcars-text-data;
+    }
+  }
+  
+  .audio-toggle {
+    margin-top: 20px;
+    background: $lcars-bg-medium;
+    color: $lcars-green;
+    border-right: 5px solid $lcars-green;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba($lcars-green, 0.2);
+      box-shadow: 0 0 15px rgba($lcars-green, 0.5);
+    }
+    
+    &.disabled {
+      color: $lcars-red;
+      border-right-color: $lcars-red;
+      
+      &:hover {
+        background: rgba($lcars-red, 0.2);
+        box-shadow: 0 0 15px rgba($lcars-red, 0.5);
+      }
     }
   }
   
@@ -603,4 +664,380 @@ body {
   100% {
     box-shadow: 0 0 5px $lcars-green;
   }
+}
+
+// Tactical Section Styles
+.tactical-section {
+  padding: 20px;
+  
+  .tactical-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    height: 100%;
+  }
+  
+  .tactical-panel {
+    background: rgba(51, 51, 51, 0.6);
+    border: 2px solid $lcars-orange;
+    border-radius: 10px;
+    padding: 15px;
+    
+    h3 {
+      color: $lcars-orange;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 1px solid $lcars-orange;
+      padding-bottom: 8px;
+    }
+  }
+  
+  // Weapons Panel
+  .weapons-panel {
+    .weapon-status {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .weapon-item {
+      padding: 15px;
+      border: 1px solid rgba(255, 153, 51, 0.5);
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-radius: 4px;
+      
+      .weapon-label {
+        color: $lcars-orange;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      
+      .weapon-indicator {
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 51, 51, 0.3);
+        border-radius: 50%;
+        
+        &.armed {
+          background: #ff3333;
+          box-shadow: 0 0 10px #ff3333;
+          animation: pulse-red 1s infinite;
+        }
+      }
+      
+      .weapon-value {
+        color: $lcars-blue;
+        font-size: 12px;
+      }
+      
+      .weapon-controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      
+      .tactical-button {
+        background: rgba(255, 153, 51, 0.2);
+        border: 1px solid $lcars-orange;
+        color: $lcars-orange;
+        padding: 8px 12px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+        flex: 1;
+        
+        &:hover {
+          background: rgba(255, 153, 51, 0.4);
+        }
+        
+        &.armed {
+          background: rgba(255, 51, 51, 0.3);
+          border-color: #ff3333;
+          color: #ff3333;
+        }
+        
+        &:disabled {
+          background: rgba(128, 128, 128, 0.2);
+          border-color: #666666;
+          color: #666666;
+          cursor: not-allowed;
+        }
+        
+        &.fire-button {
+          &.ready {
+            background: rgba(255, 51, 51, 0.4);
+            border-color: #ff3333;
+            color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+            
+            &:hover {
+              background: rgba(255, 51, 51, 0.6);
+              box-shadow: 0 0 12px rgba(255, 51, 51, 0.8);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Scanner Panel
+  .scanner-panel {
+    .scanner-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .scanner-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 5px;
+      
+      .scanner-label {
+        color: $lcars-blue;
+        font-size: 0.9em;
+        font-weight: bold;
+      }
+      
+      .scanner-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: $lcars-bg-medium;
+        
+        &.active {
+          background: $lcars-green;
+          box-shadow: 0 0 8px $lcars-green;
+        }
+      }
+      
+      .scanner-value {
+        color: $lcars-orange;
+        font-size: 0.9em;
+        text-align: right;
+      }
+    }
+  }
+  
+  // Alert Panel
+  .alert-panel {
+    .alert-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .current-alert {
+      padding: 15px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+      
+      &.green {
+        color: $lcars-green;
+        border: 2px solid $lcars-green;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+      }
+      
+      &.yellow {
+        color: $lcars-yellow;
+        border: 2px solid $lcars-yellow;
+        box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+        animation: pulse-yellow 2s infinite;
+      }
+      
+      &.red {
+        color: #ff4444;
+        border: 2px solid #ff4444;
+        box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+        animation: pulse-red 1s infinite;
+      }
+    }
+    
+    .alert-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        
+        &.red-alert-button {
+          background: #aa0000;
+          color: white;
+          
+          &:hover, &.active {
+            background: #ff4444;
+            box-shadow: 0 0 15px #ff4444;
+          }
+        }
+        
+        &.yellow-alert-button {
+          background: #aaaa00;
+          color: white;
+          
+          &:hover, &.active {
+            background: $lcars-yellow;
+            color: $lcars-bg-dark;
+            box-shadow: 0 0 15px $lcars-yellow;
+          }
+        }
+        
+        &.green-alert-button {
+          background: #006600;
+          color: white;
+          
+          &:hover, &.active {
+            background: $lcars-green;
+            color: $lcars-bg-dark;
+            box-shadow: 0 0 15px $lcars-green;
+          }
+        }
+      }
+    }
+  }
+  
+  // Display Panel
+  .display-panel {
+    .tactical-display {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 5px;
+      padding: 15px;
+      height: 200px;
+      position: relative;
+    }
+    
+    .display-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
+      gap: 10px;
+    }
+    
+    .target-display {
+      position: relative;
+      background: radial-gradient(circle at center, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+      border: 1px solid $lcars-green;
+      border-radius: 50%;
+      
+      .crosshairs {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 80%;
+        
+        &::before, &::after {
+          content: '';
+          position: absolute;
+          background: $lcars-green;
+        }
+        
+        &::before {
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 1px;
+          transform: translateY(-50%);
+        }
+        
+        &::after {
+          left: 50%;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          transform: translateX(-50%);
+        }
+      }
+      
+      .range-rings {
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        right: 10%;
+        bottom: 10%;
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 50%;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 25%;
+          left: 25%;
+          right: 25%;
+          bottom: 25%;
+          border: 1px solid rgba(0, 255, 0, 0.3);
+          border-radius: 50%;
+        }
+      }
+      
+      .target-marker {
+        position: absolute;
+        top: 30%;
+        left: 60%;
+        width: 8px;
+        height: 8px;
+        background: #ff4444;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #ff4444;
+        animation: pulse-red 1s infinite;
+      }
+    }
+    
+    .tactical-readout {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      
+      .readout-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255, 153, 0, 0.3);
+        
+        span:first-child {
+          color: $lcars-orange;
+          font-size: 0.9em;
+        }
+        
+        .readout-value {
+          color: $lcars-blue;
+          font-family: monospace;
+        }
+      }
+    }
+  }
+}
+
+// Additional animations
+@keyframes pulse-red {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+@keyframes pulse-yellow {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }

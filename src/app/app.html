@@ -20,6 +20,7 @@
       <div class="lcars-button" [class.active]="activeSection() === 'ECONOMICS'" (click)="setActiveSection('ECONOMICS')">ECONOMICS</div>
       <div class="lcars-button" [class.active]="activeSection() === 'ENGINEERING'" (click)="setActiveSection('ENGINEERING')">ENGINEERING</div>
       <div class="lcars-button" [class.active]="activeSection() === 'MEDICAL'" (click)="setActiveSection('MEDICAL')">MEDICAL</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'TACTICAL'" (click)="setActiveSection('TACTICAL')">TACTICAL</div>
       <div class="lcars-spacer"></div>
       <div class="lcars-text-display">
         STARDATE<br>
@@ -337,6 +338,140 @@
             </div>
           </div>
         }
+        
+        <!-- Tactical Section -->
+        @if (activeSection() === 'TACTICAL') {
+          <div class="tactical-section">
+            <div class="tactical-grid">
+              <!-- Weapons Systems -->
+              <div class="tactical-panel weapons-panel">
+                <h3>WEAPONS SYSTEMS</h3>
+                <div class="weapon-status">
+                  <div class="weapon-item">
+                    <div class="weapon-label">PHASERS</div>
+                    <div class="weapon-indicator" [class.armed]="phaserStatus() === 'ARMED'"></div>
+                    <div class="weapon-value">{{ phaserStatus() }}</div>
+                    <div class="weapon-controls">
+                      <button class="tactical-button" 
+                              [class.armed]="phaserStatus() === 'ARMED'"
+                              (click)="togglePhasers()">{{ phaserStatus() === 'ARMED' ? 'DISARM' : 'ARM' }}</button>
+                      <button class="tactical-button fire-button" 
+                              [disabled]="phaserStatus() !== 'ARMED'"
+                              [class.ready]="phaserStatus() === 'ARMED'"
+                              (click)="firePhasers()">FIRE</button>
+                    </div>
+                  </div>
+                  
+                  <div class="weapon-item">
+                    <div class="weapon-label">PHOTON TORPEDOES</div>
+                    <div class="weapon-indicator" [class.armed]="torpedoStatus() === 'ARMED'"></div>
+                    <div class="weapon-value">{{ torpedoCount() }} LOADED</div>
+                    <div class="weapon-controls">
+                      <button class="tactical-button"
+                              [class.armed]="torpedoStatus() === 'ARMED'"
+                              (click)="toggleTorpedoes()">{{ torpedoStatus() === 'ARMED' ? 'DISARM' : 'ARM' }}</button>
+                      <button class="tactical-button fire-button" 
+                              [disabled]="torpedoStatus() !== 'ARMED' || torpedoCount() <= 0"
+                              [class.ready]="torpedoStatus() === 'ARMED' && torpedoCount() > 0"
+                              (click)="fireTorpedoes()">FIRE</button>
+                    </div>
+                  </div>
+                  
+                  <div class="weapon-item">
+                    <div class="weapon-label">SHIELDS</div>
+                    <div class="weapon-indicator" [class.active]="shieldStatus() === 'UP'"></div>
+                    <div class="weapon-value">{{ shieldPower() }}%</div>
+                    <button class="tactical-button"
+                            [class.active]="shieldStatus() === 'UP'"
+                            (click)="toggleShields()">{{ shieldStatus() === 'UP' ? 'LOWER' : 'RAISE' }}</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Scanner Systems -->
+              <div class="tactical-panel scanner-panel">
+                <h3>SENSOR ARRAY</h3>
+                <div class="scanner-grid">
+                  <div class="scanner-item">
+                    <div class="scanner-label">LONG RANGE SENSORS</div>
+                    <div class="scanner-indicator active"></div>
+                    <div class="scanner-value">{{ longRangeScanRange() }} LY</div>
+                  </div>
+                  
+                  <div class="scanner-item">
+                    <div class="scanner-label">SHORT RANGE SENSORS</div>
+                    <div class="scanner-indicator active"></div>
+                    <div class="scanner-value">{{ shortRangeScanRange() }} KM</div>
+                  </div>
+                  
+                  <div class="scanner-item">
+                    <div class="scanner-label">DEFLECTOR ARRAY</div>
+                    <div class="scanner-indicator" [class.active]="deflectorStatus() === 'ACTIVE'"></div>
+                    <div class="scanner-value">{{ deflectorStatus() }}</div>
+                  </div>
+                  
+                  <div class="scanner-item">
+                    <div class="scanner-label">THREAT ASSESSMENT</div>
+                    <div class="scanner-indicator" [class.active]="threatLevel() !== 'NONE'"></div>
+                    <div class="scanner-value">{{ threatLevel() }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Red Alert Controls -->
+              <div class="tactical-panel alert-panel">
+                <h3>ALERT STATUS</h3>
+                <div class="alert-controls">
+                  <div class="current-alert" [class.red]="alertStatus() === 'RED'" 
+                                           [class.yellow]="alertStatus() === 'YELLOW'"
+                                           [class.green]="alertStatus() === 'GREEN'">
+                    {{ alertStatus() }} ALERT
+                  </div>
+                  
+                  <div class="alert-buttons">
+                    <button class="red-alert-button" 
+                            [class.active]="alertStatus() === 'RED'"
+                            (click)="setRedAlert()">RED ALERT</button>
+                    <button class="yellow-alert-button"
+                            [class.active]="alertStatus() === 'YELLOW'" 
+                            (click)="setYellowAlert()">YELLOW ALERT</button>
+                    <button class="green-alert-button"
+                            [class.active]="alertStatus() === 'GREEN'"
+                            (click)="setGreenAlert()">ALL CLEAR</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tactical Display -->
+              <div class="tactical-panel display-panel">
+                <h3>TACTICAL DISPLAY</h3>
+                <div class="tactical-display">
+                  <div class="display-grid">
+                    <div class="target-display">
+                      <div class="crosshairs"></div>
+                      <div class="range-rings"></div>
+                      <div class="target-marker" [style.display]="hasTarget() ? 'block' : 'none'"></div>
+                    </div>
+                    <div class="tactical-readout">
+                      <div class="readout-line">
+                        <span>RANGE:</span>
+                        <span class="readout-value">{{ targetRange() }}</span>
+                      </div>
+                      <div class="readout-line">
+                        <span>BEARING:</span>
+                        <span class="readout-value">{{ targetBearing() }}</span>
+                      </div>
+                      <div class="readout-line">
+                        <span>VELOCITY:</span>
+                        <span class="readout-value">{{ targetVelocity() }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
       </div>
     </div>
 
@@ -345,9 +480,24 @@
       <div class="lcars-slider">
         <div class="slider-label">WARP SPEED</div>
         <div class="slider-track">
+          <input type="range" 
+                 min="0" 
+                 max="10" 
+                 [value]="warpSpeed()" 
+                 (input)="onWarpSpeedChange($event)"
+                 class="warp-slider-input"
+                 title="Warp Speed Control"
+                 aria-label="Warp Speed Control">
           <div class="slider-thumb" [style.left.%]="warpSpeed() * 10"></div>
         </div>
         <div class="slider-value">{{ warpSpeed() }}</div>
+      </div>
+      
+      <div class="lcars-button audio-toggle" 
+           [class.disabled]="!isAudioEnabled()" 
+           (click)="onAudioToggle()"
+           title="Toggle Audio">
+        {{ isAudioEnabled() ? 'AUDIO ON' : 'AUDIO OFF' }}
       </div>
       
       <div class="lcars-alert-panel">
