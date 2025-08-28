@@ -73,7 +73,7 @@ The dashboard integrates with multiple free APIs:
 
 ## 🛸 Live Demo
 
-Visit the live demo: [GitHub Pages URL]
+Visit the live demo: **[https://vincemic.github.io/ai-lcars/](https://vincemic.github.io/ai-lcars/)**
 
 ## 🔧 Technologies Used
 
