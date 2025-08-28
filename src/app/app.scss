@@ -31,6 +31,8 @@ body {
   background: $lcars-bg-dark;
   color: $lcars-text-primary;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .lcars-container {
@@ -38,6 +40,10 @@ body {
   display: flex;
   flex-direction: column;
   background: linear-gradient(45deg, #000 25%, #111 75%);
+  transform: scale(0.7);
+  transform-origin: top left;
+  width: 142.857%; // Compensate for the scale to maintain full viewport coverage
+  height: 142.857vh;
 }
 
 // Header Styles
