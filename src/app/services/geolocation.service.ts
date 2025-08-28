@@ -92,25 +92,29 @@ export class GeolocationService {
 
   private getIPLocation(): Observable<LocationData | null> {
     // Using ip-api.com for IP geolocation (free, no API key required)
-    return this.http.get<any>('http://ip-api.com/json/').pipe(
+    return this.http.get<any>('https://ipapi.co/json/').pipe(
       map(response => {
-        if (response.status === 'success') {
+        console.log('IP geolocation response:', response);
+        if (response.city) {
           return {
-            latitude: response.lat,
-            longitude: response.lon,
+            latitude: response.latitude,
+            longitude: response.longitude,
             city: response.city,
-            region: response.regionName,
-            country: response.country,
-            countryCode: response.countryCode,
+            region: response.region,
+            country: response.country_name,
+            countryCode: response.country_code,
             timezone: response.timezone,
-            isp: response.isp,
-            ip: response.query,
+            isp: response.org || 'Unknown ISP',
+            ip: response.ip,
             source: 'ip' as const
           };
         }
         return this.getMockLocation();
       }),
-      catchError(() => of(this.getMockLocation()))
+      catchError((error) => {
+        console.warn('IP geolocation failed, using mock location:', error);
+        return of(this.getMockLocation());
+      })
     );
   }
 
