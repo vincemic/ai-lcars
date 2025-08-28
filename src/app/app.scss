@@ -439,3 +439,168 @@ body {
     }
   }
 }
+
+// New Data Section Styles
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.data-panel {
+  background: rgba(51, 51, 51, 0.3);
+  border: 2px solid $lcars-orange;
+  border-radius: 10px;
+  padding: 15px;
+  
+  h3 {
+    color: $lcars-orange;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+  }
+}
+
+.data-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  
+  span:first-child {
+    color: $lcars-text-secondary;
+    font-weight: 400;
+  }
+  
+  .data-value {
+    color: $lcars-text-data;
+    font-weight: 700;
+    
+    &.warning {
+      color: $lcars-red;
+    }
+  }
+  
+  .data-change {
+    font-size: 0.8rem;
+    margin-left: 8px;
+    
+    &.positive {
+      color: $lcars-green;
+    }
+    
+    &.negative {
+      color: $lcars-red;
+    }
+  }
+}
+
+// News Items
+.news-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-left: 4px solid $lcars-blue;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 0 8px 8px 0;
+  
+  .news-title {
+    color: $lcars-text-primary;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  
+  .news-meta {
+    color: $lcars-text-secondary;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+  }
+  
+  .news-description {
+    color: $lcars-text-secondary;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
+
+// Section-specific styles
+.space-section,
+.environment-section,
+.navigation-section,
+.communications-section,
+.economics-section {
+  padding: 20px;
+  height: 100%;
+}
+
+.communications-section {
+  .data-panel {
+    max-height: 500px;
+    overflow-y: auto;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(51, 51, 51, 0.3);
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $lcars-orange;
+      border-radius: 3px;
+    }
+  }
+}
+
+// Enhanced button states
+.lcars-button {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background: color.scale($lcars-orange, $lightness: 20%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 153, 0, 0.3);
+  }
+  
+  &.active {
+    background: $lcars-orange;
+    color: $lcars-bg-dark;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Animation for data updates
+.data-value {
+  transition: all 0.5s ease;
+  
+  &.updating {
+    color: $lcars-yellow;
+    text-shadow: 0 0 10px $lcars-yellow;
+  }
+}
+
+// Status indicators with pulse effect
+.status-indicator {
+  &.active {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 5px $lcars-green;
+  }
+  50% {
+    box-shadow: 0 0 15px $lcars-green, 0 0 25px $lcars-green;
+  }
+  100% {
+    box-shadow: 0 0 5px $lcars-green;
+  }
+}

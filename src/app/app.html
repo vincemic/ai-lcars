@@ -13,86 +13,282 @@
   <div class="lcars-main">
     <!-- Left Panel -->
     <div class="lcars-left-panel">
-      <div class="lcars-button active">NAVIGATION</div>
-      <div class="lcars-button">SENSORS</div>
-      <div class="lcars-button">TACTICAL</div>
-      <div class="lcars-button">ENGINEERING</div>
-      <div class="lcars-button">MEDICAL</div>
-      <div class="lcars-button">SCIENCE</div>
-      <div class="lcars-button">COMMUNICATIONS</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'SPACE'" (click)="setActiveSection('SPACE')">SPACE</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'ENVIRONMENT'" (click)="setActiveSection('ENVIRONMENT')">ENVIRONMENT</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'NAVIGATION'" (click)="setActiveSection('NAVIGATION')">NAVIGATION</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'COMMUNICATIONS'" (click)="setActiveSection('COMMUNICATIONS')">COMMUNICATIONS</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'ECONOMICS'" (click)="setActiveSection('ECONOMICS')">ECONOMICS</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'ENGINEERING'" (click)="setActiveSection('ENGINEERING')">ENGINEERING</div>
+      <div class="lcars-button" [class.active]="activeSection() === 'MEDICAL'" (click)="setActiveSection('MEDICAL')">MEDICAL</div>
       <div class="lcars-spacer"></div>
       <div class="lcars-text-display">
         STARDATE<br>
         <span class="lcars-data">{{ currentStardate() }}</span>
       </div>
+      @if (issPosition()) {
+        <div class="lcars-text-display">
+          ISS POSITION<br>
+          <span class="lcars-data">{{ formatCoordinate(issPosition()!.latitude, true) }}</span><br>
+          <span class="lcars-data">{{ formatCoordinate(issPosition()!.longitude, false) }}</span>
+        </div>
+      }
     </div>
 
     <!-- Center Content -->
     <div class="lcars-center">
       <div class="lcars-screen">
         <div class="lcars-screen-header">
-          <span class="lcars-text">BRIDGE OPERATIONS STATUS</span>
+          <span class="lcars-text">{{ activeSection() }} OPERATIONS STATUS</span>
         </div>
         
-        <div class="status-grid">
-          <div class="status-item">
-            <div class="status-label">WARP CORE</div>
-            <div class="status-indicator active"></div>
-            <div class="status-value">OPTIMAL</div>
+        <!-- Space Section -->
+        @if (activeSection() === 'SPACE') {
+          <div class="space-section">
+            <div class="data-grid">
+              <div class="data-panel">
+                <h3>ISS TRACKING</h3>
+                @if (issPosition()) {
+                  <div class="data-line">
+                    <span>Altitude:</span>
+                    <span class="data-value">{{ issPosition()!.altitude }} km</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Coordinates:</span>
+                    <span class="data-value">{{ formatCoordinate(issPosition()!.latitude, true) }}, {{ formatCoordinate(issPosition()!.longitude, false) }}</span>
+                  </div>
+                } @else {
+                  <div class="data-line">
+                    <span class="data-value">Acquiring signal...</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>ASTRONAUTS IN SPACE</h3>
+                @for (astronaut of astronauts(); track astronaut.name) {
+                  <div class="data-line">
+                    <span>{{ astronaut.name }}:</span>
+                    <span class="data-value">{{ astronaut.craft }}</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>UPCOMING LAUNCHES</h3>
+                @for (launch of upcomingLaunches().slice(0, 3); track launch.flight_number) {
+                  <div class="data-line">
+                    <span>{{ launch.name }}:</span>
+                    <span class="data-value">{{ launch.date_utc | date:'MMM dd' }}</span>
+                  </div>
+                }
+              </div>
+            </div>
           </div>
-          
-          <div class="status-item">
-            <div class="status-label">SHIELDS</div>
-            <div class="status-indicator active"></div>
-            <div class="status-value">100%</div>
+        }
+        
+        <!-- Environment Section -->
+        @if (activeSection() === 'ENVIRONMENT') {
+          <div class="environment-section">
+            <div class="data-grid">
+              <div class="data-panel">
+                <h3>WEATHER CONDITIONS</h3>
+                @if (weather()) {
+                  <div class="data-line">
+                    <span>Temperature:</span>
+                    <span class="data-value">{{ weather()!.temperature }}°C</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Humidity:</span>
+                    <span class="data-value">{{ weather()!.humidity }}%</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Pressure:</span>
+                    <span class="data-value">{{ weather()!.pressure }} hPa</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Conditions:</span>
+                    <span class="data-value">{{ weather()!.description }}</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>AIR QUALITY</h3>
+                @if (airQuality()) {
+                  <div class="data-line">
+                    <span>AQI:</span>
+                    <span class="data-value" [class.warning]="airQuality()!.aqi > 100">{{ airQuality()!.aqi }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>Status:</span>
+                    <span class="data-value">{{ airQuality()!.status }}</span>
+                  </div>
+                  <div class="data-line">
+                    <span>PM2.5:</span>
+                    <span class="data-value">{{ airQuality()!.pm25 }} μg/m³</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>SEISMIC ACTIVITY</h3>
+                @for (earthquake of recentEarthquakes().slice(0, 3); track earthquake.location) {
+                  <div class="data-line">
+                    <span>M{{ earthquake.magnitude }}:</span>
+                    <span class="data-value">{{ earthquake.location }}</span>
+                  </div>
+                }
+              </div>
+            </div>
           </div>
-          
-          <div class="status-item">
-            <div class="status-label">LIFE SUPPORT</div>
-            <div class="status-indicator active"></div>
-            <div class="status-value">NOMINAL</div>
+        }
+        
+        <!-- Navigation Section -->
+        @if (activeSection() === 'NAVIGATION') {
+          <div class="navigation-section">
+            <div class="data-grid">
+              <div class="data-panel">
+                <h3>NEARBY AIRCRAFT</h3>
+                @for (flight of nearbyFlights().slice(0, 5); track flight.callsign) {
+                  <div class="data-line">
+                    <span>{{ flight.callsign }}:</span>
+                    <span class="data-value">{{ flight.altitude }}m, {{ flight.velocity }}m/s</span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>SHIP STATUS</h3>
+                <div class="data-line">
+                  <span>Hull Integrity:</span>
+                  <span class="data-value">{{ hullIntegrity() }}%</span>
+                </div>
+                <div class="data-line">
+                  <span>Warp Speed:</span>
+                  <span class="data-value">{{ warpSpeed() }}</span>
+                </div>
+                <div class="data-line">
+                  <span>Power Levels:</span>
+                  <span class="data-value">{{ powerLevels() }}%</span>
+                </div>
+              </div>
+            </div>
           </div>
-          
-          <div class="status-item">
-            <div class="status-label">IMPULSE ENGINES</div>
-            <div class="status-indicator active"></div>
-            <div class="status-value">STANDBY</div>
+        }
+        
+        <!-- Communications Section -->
+        @if (activeSection() === 'COMMUNICATIONS') {
+          <div class="communications-section">
+            <div class="data-panel">
+              <h3>LATEST TRANSMISSIONS</h3>
+              @for (news of latestNews().slice(0, 4); track news.title) {
+                <div class="news-item">
+                  <div class="news-title">{{ news.title }}</div>
+                  <div class="news-meta">{{ news.source }} - {{ formatTimeAgo(news.publishedAt) }}</div>
+                  <div class="news-description">{{ news.description }}</div>
+                </div>
+              }
+            </div>
           </div>
-        </div>
+        }
+        
+        <!-- Economics Section -->
+        @if (activeSection() === 'ECONOMICS') {
+          <div class="economics-section">
+            <div class="data-grid">
+              <div class="data-panel">
+                <h3>ECONOMIC INDICATORS</h3>
+                @for (indicator of economicIndicators(); track indicator.name) {
+                  <div class="data-line">
+                    <span>{{ indicator.name }}:</span>
+                    <span class="data-value">{{ indicator.value }} {{ indicator.unit }}</span>
+                    <span class="data-change" [class.positive]="indicator.change > 0" [class.negative]="indicator.change < 0">
+                      {{ indicator.change > 0 ? '+' : '' }}{{ indicator.change }}
+                    </span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
+                <h3>CURRENCY VALUES</h3>
+                @for (crypto of cryptoPrices(); track crypto.symbol) {
+                  <div class="data-line">
+                    <span>{{ crypto.symbol }}:</span>
+                    <span class="data-value">{{ crypto.price | number:'1.0-2' }}</span>
+                    <span class="data-change" [class.positive]="crypto.change24h > 0" [class.negative]="crypto.change24h < 0">
+                      {{ crypto.change24h > 0 ? '+' : '' }}{{ crypto.change24h | number:'1.1-1' }}%
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+        
+        <!-- Engineering Section (Default) -->
+        @if (activeSection() === 'ENGINEERING' || activeSection() === 'MEDICAL') {
+          <div class="engineering-section">
+            <div class="status-grid">
+              <div class="status-item">
+                <div class="status-label">WARP CORE</div>
+                <div class="status-indicator active"></div>
+                <div class="status-value">OPTIMAL</div>
+              </div>
+              
+              <div class="status-item">
+                <div class="status-label">SHIELDS</div>
+                <div class="status-indicator active"></div>
+                <div class="status-value">100%</div>
+              </div>
+              
+              <div class="status-item">
+                <div class="status-label">LIFE SUPPORT</div>
+                <div class="status-indicator active"></div>
+                <div class="status-value">NOMINAL</div>
+              </div>
+              
+              <div class="status-item">
+                <div class="status-label">IMPULSE ENGINES</div>
+                <div class="status-indicator active"></div>
+                <div class="status-value">STANDBY</div>
+              </div>
+            </div>
 
-        <div class="lcars-data-panel">
-          <div class="data-column">
-            <h3>SENSOR READINGS</h3>
-            <div class="data-line">
-              <span>Temperature:</span>
-              <span class="data-value">{{ shipTemperature() }}°C</span>
-            </div>
-            <div class="data-line">
-              <span>Hull Integrity:</span>
-              <span class="data-value">{{ hullIntegrity() }}%</span>
-            </div>
-            <div class="data-line">
-              <span>Power Levels:</span>
-              <span class="data-value">{{ powerLevels() }}%</span>
+            <div class="lcars-data-panel">
+              <div class="data-column">
+                <h3>SENSOR READINGS</h3>
+                <div class="data-line">
+                  <span>Temperature:</span>
+                  <span class="data-value">{{ shipTemperature() }}°C</span>
+                </div>
+                <div class="data-line">
+                  <span>Hull Integrity:</span>
+                  <span class="data-value">{{ hullIntegrity() }}%</span>
+                </div>
+                <div class="data-line">
+                  <span>Power Levels:</span>
+                  <span class="data-value">{{ powerLevels() }}%</span>
+                </div>
+              </div>
+              
+              <div class="data-column">
+                <h3>CREW STATUS</h3>
+                <div class="data-line">
+                  <span>Personnel:</span>
+                  <span class="data-value">{{ crewCount() }}</span>
+                </div>
+                <div class="data-line">
+                  <span>On Duty:</span>
+                  <span class="data-value">{{ onDuty() }}</span>
+                </div>
+                <div class="data-line">
+                  <span>Medical:</span>
+                  <span class="data-value">{{ medicalStatus() }}</span>
+                </div>
+              </div>
             </div>
           </div>
-          
-          <div class="data-column">
-            <h3>CREW STATUS</h3>
-            <div class="data-line">
-              <span>Personnel:</span>
-              <span class="data-value">{{ crewCount() }}</span>
-            </div>
-            <div class="data-line">
-              <span>On Duty:</span>
-              <span class="data-value">{{ onDuty() }}</span>
-            </div>
-            <div class="data-line">
-              <span>Medical:</span>
-              <span class="data-value">{{ medicalStatus() }}</span>
-            </div>
-          </div>
-        </div>
+        }
       </div>
     </div>
 
