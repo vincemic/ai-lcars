@@ -1,0 +1,138 @@
+<!-- LCARS Star Trek Dashboard -->
+<div class="lcars-container">
+  <!-- Header Section -->
+  <div class="lcars-header">
+    <div class="lcars-elbow top-left"></div>
+    <div class="lcars-bar header-bar">
+      <span class="lcars-text">USS ENTERPRISE NCC-1701-D</span>
+    </div>
+    <div class="lcars-elbow top-right"></div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="lcars-main">
+    <!-- Left Panel -->
+    <div class="lcars-left-panel">
+      <div class="lcars-button active">NAVIGATION</div>
+      <div class="lcars-button">SENSORS</div>
+      <div class="lcars-button">TACTICAL</div>
+      <div class="lcars-button">ENGINEERING</div>
+      <div class="lcars-button">MEDICAL</div>
+      <div class="lcars-button">SCIENCE</div>
+      <div class="lcars-button">COMMUNICATIONS</div>
+      <div class="lcars-spacer"></div>
+      <div class="lcars-text-display">
+        STARDATE<br>
+        <span class="lcars-data">{{ currentStardate() }}</span>
+      </div>
+    </div>
+
+    <!-- Center Content -->
+    <div class="lcars-center">
+      <div class="lcars-screen">
+        <div class="lcars-screen-header">
+          <span class="lcars-text">BRIDGE OPERATIONS STATUS</span>
+        </div>
+        
+        <div class="status-grid">
+          <div class="status-item">
+            <div class="status-label">WARP CORE</div>
+            <div class="status-indicator active"></div>
+            <div class="status-value">OPTIMAL</div>
+          </div>
+          
+          <div class="status-item">
+            <div class="status-label">SHIELDS</div>
+            <div class="status-indicator active"></div>
+            <div class="status-value">100%</div>
+          </div>
+          
+          <div class="status-item">
+            <div class="status-label">LIFE SUPPORT</div>
+            <div class="status-indicator active"></div>
+            <div class="status-value">NOMINAL</div>
+          </div>
+          
+          <div class="status-item">
+            <div class="status-label">IMPULSE ENGINES</div>
+            <div class="status-indicator active"></div>
+            <div class="status-value">STANDBY</div>
+          </div>
+        </div>
+
+        <div class="lcars-data-panel">
+          <div class="data-column">
+            <h3>SENSOR READINGS</h3>
+            <div class="data-line">
+              <span>Temperature:</span>
+              <span class="data-value">{{ shipTemperature() }}°C</span>
+            </div>
+            <div class="data-line">
+              <span>Hull Integrity:</span>
+              <span class="data-value">{{ hullIntegrity() }}%</span>
+            </div>
+            <div class="data-line">
+              <span>Power Levels:</span>
+              <span class="data-value">{{ powerLevels() }}%</span>
+            </div>
+          </div>
+          
+          <div class="data-column">
+            <h3>CREW STATUS</h3>
+            <div class="data-line">
+              <span>Personnel:</span>
+              <span class="data-value">{{ crewCount() }}</span>
+            </div>
+            <div class="data-line">
+              <span>On Duty:</span>
+              <span class="data-value">{{ onDuty() }}</span>
+            </div>
+            <div class="data-line">
+              <span>Medical:</span>
+              <span class="data-value">{{ medicalStatus() }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="lcars-right-panel">
+      <div class="lcars-slider">
+        <div class="slider-label">WARP SPEED</div>
+        <div class="slider-track">
+          <div class="slider-thumb" [style.left.%]="warpSpeed() * 10"></div>
+        </div>
+        <div class="slider-value">{{ warpSpeed() }}</div>
+      </div>
+      
+      <div class="lcars-alert-panel">
+        <div class="alert-header">ALERTS</div>
+        <div class="alert-item" *ngFor="let alert of alerts" [ngClass]="alert.priority">
+          {{ alert.message }}
+        </div>
+      </div>
+      
+      <div class="lcars-time-display">
+        <div class="time-label">CURRENT TIME</div>
+        <div class="time-value">{{ currentTime() | date:'HH:mm:ss' }}</div>
+        <div class="date-value">{{ currentTime() | date:'yyyy.MM.dd' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="lcars-footer">
+    <div class="lcars-elbow bottom-left"></div>
+    <div class="lcars-bar footer-bar">
+      <span class="lcars-text">COMPUTER ACCESS</span>
+      <span class="lcars-separator">|</span>
+      <span class="lcars-text">LEVEL 10</span>
+      <span class="lcars-separator">|</span>
+      <span class="lcars-text">AUTHORIZATION REQUIRED</span>
+    </div>
+    <div class="lcars-elbow bottom-right"></div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
