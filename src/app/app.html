@@ -232,6 +232,19 @@
           <div class="economics-section">
             <div class="data-grid">
               <div class="data-panel">
+                <h3>STOCK INDICES</h3>
+                @for (stock of stockIndices().slice(0, 8); track stock.symbol) {
+                  <div class="data-line">
+                    <span>{{ stock.name }}:</span>
+                    <span class="data-value">{{ stock.value | number:'1.0-2' }}</span>
+                    <span class="data-change" [class.positive]="stock.change > 0" [class.negative]="stock.change < 0">
+                      {{ stock.change > 0 ? '+' : '' }}{{ stock.change | number:'1.0-2' }} ({{ stock.changePercent > 0 ? '+' : '' }}{{ stock.changePercent | number:'1.1-1' }}%)
+                    </span>
+                  </div>
+                }
+              </div>
+              
+              <div class="data-panel">
                 <h3>ECONOMIC INDICATORS</h3>
                 @for (indicator of economicIndicators(); track indicator.name) {
                   <div class="data-line">

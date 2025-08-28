@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { SpaceDataService, ISSPosition, Astronaut, SpaceXLaunch } from './services/space-data.service';
 import { EnvironmentalService, WeatherData, AirQuality, EarthquakeData } from './services/environmental.service';
-import { GlobalDataService, FlightData, NewsItem, EconomicIndicator, CryptoCurrency } from './services/global-data.service';
+import { GlobalDataService, FlightData, NewsItem, EconomicIndicator, StockIndex, CryptoCurrency } from './services/global-data.service';
 import { GeolocationService, LocationData } from './services/geolocation.service';
 
 interface Alert {
@@ -39,6 +39,7 @@ export class App implements OnInit {
   nearbyFlights = signal<FlightData[]>([]);
   latestNews = signal<NewsItem[]>([]);
   economicIndicators = signal<EconomicIndicator[]>([]);
+  stockIndices = signal<StockIndex[]>([]);
   cryptoPrices = signal<CryptoCurrency[]>([]);
   
   // Ship data properties
@@ -135,6 +136,10 @@ export class App implements OnInit {
 
     this.globalDataService.getEconomicData().subscribe(economic => {
       this.economicIndicators.set(economic);
+    });
+
+    this.globalDataService.getStockIndices().subscribe(stocks => {
+      this.stockIndices.set(stocks);
     });
 
     this.globalDataService.getCryptoData().subscribe(crypto => {

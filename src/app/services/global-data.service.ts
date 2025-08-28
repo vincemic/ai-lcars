@@ -29,6 +29,15 @@ export interface EconomicIndicator {
   lastUpdated: string;
 }
 
+export interface StockIndex {
+  symbol: string;
+  name: string;
+  value: number;
+  change: number;
+  changePercent: number;
+  lastUpdated: string;
+}
+
 export interface CryptoCurrency {
   symbol: string;
   name: string;
@@ -47,6 +56,7 @@ export class GlobalDataService {
   private flights$ = new BehaviorSubject<FlightData[]>([]);
   private news$ = new BehaviorSubject<NewsItem[]>([]);
   private economicData$ = new BehaviorSubject<EconomicIndicator[]>([]);
+  private stockIndices$ = new BehaviorSubject<StockIndex[]>([]);
   private cryptoData$ = new BehaviorSubject<CryptoCurrency[]>([]);
 
   constructor() {
@@ -81,6 +91,15 @@ export class GlobalDataService {
       })
     ).subscribe(economic => this.economicData$.next(economic));
 
+    // Update stock indices every 5 minutes
+    interval(300000).pipe(
+      switchMap(() => this.fetchStockIndices()),
+      catchError(err => {
+        console.error('Stock indices error:', err);
+        return of([]);
+      })
+    ).subscribe(stocks => this.stockIndices$.next(stocks));
+
     // Update crypto data every 2 minutes
     interval(120000).pipe(
       switchMap(() => this.fetchCryptoData()),
@@ -98,6 +117,7 @@ export class GlobalDataService {
     this.fetchNearbyFlights().subscribe(flights => this.flights$.next(flights));
     this.fetchLatestNews().subscribe(news => this.news$.next(news));
     this.fetchEconomicData().subscribe(economic => this.economicData$.next(economic));
+    this.fetchStockIndices().subscribe(stocks => this.stockIndices$.next(stocks));
     this.fetchCryptoData().subscribe(crypto => this.cryptoData$.next(crypto));
   }
 
@@ -237,6 +257,78 @@ export class GlobalDataService {
     return of(indicators);
   }
 
+  private fetchStockIndices(): Observable<StockIndex[]> {
+    // Mock stock indices data (in production, use Alpha Vantage, Yahoo Finance, or similar API)
+    const indices: StockIndex[] = [
+      {
+        symbol: 'SPX',
+        name: 'S&P 500',
+        value: 4400 + Math.random() * 200 - 100,
+        change: (Math.random() - 0.5) * 100,
+        changePercent: (Math.random() - 0.5) * 3,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'DJI',
+        name: 'Dow Jones Industrial',
+        value: 34000 + Math.random() * 2000 - 1000,
+        change: (Math.random() - 0.5) * 500,
+        changePercent: (Math.random() - 0.5) * 2.5,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'IXIC',
+        name: 'NASDAQ Composite',
+        value: 13500 + Math.random() * 1000 - 500,
+        change: (Math.random() - 0.5) * 200,
+        changePercent: (Math.random() - 0.5) * 4,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'RUT',
+        name: 'Russell 2000',
+        value: 2000 + Math.random() * 200 - 100,
+        change: (Math.random() - 0.5) * 50,
+        changePercent: (Math.random() - 0.5) * 3.5,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'VIX',
+        name: 'Volatility Index',
+        value: 15 + Math.random() * 10,
+        change: (Math.random() - 0.5) * 3,
+        changePercent: (Math.random() - 0.5) * 15,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'UKX',
+        name: 'FTSE 100',
+        value: 7400 + Math.random() * 400 - 200,
+        change: (Math.random() - 0.5) * 80,
+        changePercent: (Math.random() - 0.5) * 2,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'DAX',
+        name: 'DAX (Germany)',
+        value: 15500 + Math.random() * 800 - 400,
+        change: (Math.random() - 0.5) * 150,
+        changePercent: (Math.random() - 0.5) * 2.5,
+        lastUpdated: new Date().toISOString()
+      },
+      {
+        symbol: 'N225',
+        name: 'Nikkei 225',
+        value: 28000 + Math.random() * 1000 - 500,
+        change: (Math.random() - 0.5) * 300,
+        changePercent: (Math.random() - 0.5) * 2,
+        lastUpdated: new Date().toISOString()
+      }
+    ];
+
+    return of(indices);
+  }
+
   private fetchCryptoData(): Observable<CryptoCurrency[]> {
     // Mock cryptocurrency data (in production, use CoinGecko API)
     const cryptos: CryptoCurrency[] = [
@@ -277,6 +369,10 @@ export class GlobalDataService {
 
   getEconomicData(): Observable<EconomicIndicator[]> {
     return this.economicData$.asObservable();
+  }
+
+  getStockIndices(): Observable<StockIndex[]> {
+    return this.stockIndices$.asObservable();
   }
 
   getCryptoData(): Observable<CryptoCurrency[]> {
