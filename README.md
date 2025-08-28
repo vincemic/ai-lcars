@@ -2,15 +2,15 @@
 
 ## 🤖 AI-Powered Development
 
-**This entire application was developed using GitHub Copilot in Agent Mode with Claude Sonnet 4.0!**
+**This entire application was developed using GitHub Copilot in Agent Mode with Claude Sonnet 3.5 Turbo!**
 
-This project showcases the incredible power of AI-assisted development, where natural language conversations with GitHub Copilot's Agent Mode (powered by Claude Sonnet 4.0) resulted in a fully functional, production-ready Star Trek LCARS dashboard. From initial repository creation to comprehensive testing, real-time data integration, audio systems, and tactical controls - every line of code, every test, and every feature was implemented through AI collaboration.
+This project showcases the incredible power of AI-assisted development, where natural language conversations with GitHub Copilot's Agent Mode (powered by Claude Sonnet 3.5) resulted in a fully functional, production-ready Star Trek LCARS dashboard. From initial repository creation to comprehensive testing, real-time data integration, audio systems, and tactical controls - every line of code, every test, and every feature was implemented through AI collaboration.
 
 **🎯 Development Highlights:**
 
 - **Zero Manual Coding**: 100% AI-generated codebase through conversational development
 - **Intelligent Architecture**: AI-designed service patterns, component structure, and data flow
-- **Comprehensive Testing**: AI-created 66 Playwright E2E tests across 9 test suites
+- **Comprehensive Testing**: AI-created 67 Playwright E2E tests across 10 test suites
 - **Real-time Integration**: AI-implemented 8+ external APIs with fallback systems
 - **Authentic Audio**: AI-synthesized Star Trek LCARS sounds using Web Audio API
 - **Advanced Features**: AI-built tactical systems, weapon firing, and power management
@@ -24,6 +24,14 @@ This project showcases the incredible power of AI-assisted development, where na
 A stunning recreation of the iconic Star Trek: The Next Generation LCARS (Library Computer Access/Retrieval System) interface built with Angular 17+. This fully functional dashboard displays real-time data from space, environmental, and global sources, creating an immersive Star Trek bridge experience.
 
 ![LCARS Dashboard Preview](docs/images/lcars-dashboard-preview.png)
+
+## 🌐 Live Demo
+
+**Experience the LCARS Dashboard live on GitHub Pages:**
+
+🚀 **[https://vincemic.github.io/ai-lcars/](https://vincemic.github.io/ai-lcars/)**
+
+The dashboard is automatically deployed using GitHub Actions whenever changes are pushed to the main branch. Features include real-time space data, interactive tactical controls, authentic Star Trek audio, and comprehensive monitoring systems.
 
 ## 🚀 Features
 
@@ -46,7 +54,7 @@ A stunning recreation of the iconic Star Trek: The Next Generation LCARS (Librar
 
 ### Technical Excellence
 
-- **Comprehensive Testing**: 59 Playwright E2E tests across 9 test suites
+- **Comprehensive Testing**: 67 Playwright E2E tests across 10 test suites
 - **CI/CD Pipeline**: GitHub Actions integration for automated testing
 - **Modern Architecture**: Angular signals, standalone components, and reactive programming
 - **Error Handling**: Robust fallback systems for offline functionality
