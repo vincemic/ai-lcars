@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, interval, switchMap, catchError, of } from 'rxjs';
+import { Observable, BehaviorSubject, interval, switchMap, catchError, of, map } from 'rxjs';
 
 export interface FlightData {
   callsign: string;
@@ -100,7 +100,49 @@ export class GlobalDataService {
   }
 
   private fetchNearbyFlights(): Observable<FlightData[]> {
-    // Mock flight data (in production, use OpenSky Network API)
+    // Real flight data using OpenSky Network API
+    // This API provides real-time aircraft positions worldwide
+    // For nearby flights, we'll query a bounding box around a location
+    
+    // Example coordinates for San Francisco Bay Area
+    const latMin = 37.0; // Southern boundary
+    const latMax = 38.5; // Northern boundary  
+    const lonMin = -123.0; // Western boundary
+    const lonMax = -121.5; // Eastern boundary
+    
+    const url = `https://opensky-network.org/api/states/all?lamin=${latMin}&lomin=${lonMin}&lamax=${latMax}&lomax=${lonMax}`;
+    
+    return this.http.get<any>(url).pipe(
+      catchError(err => {
+        console.warn('OpenSky API not available, using mock data:', err);
+        return of({ states: null });
+      }),
+      map(response => {
+        if (!response || !response.states) {
+          return this.getMockFlightDataSync();
+        }
+        
+        const flights: FlightData[] = response.states
+          .filter((state: any[]) => state[1] && state[6] && state[5]) // Has callsign, longitude, latitude
+          .slice(0, 10) // Limit to 10 aircraft
+          .map((state: any[]) => ({
+            callsign: state[1].trim() || `UNKNOWN-${state[0]}`,
+            country: state[2] || 'Unknown',
+            altitude: state[7] || 0, // Barometric altitude in meters
+            velocity: state[9] || 0, // Velocity in m/s
+            latitude: state[6],
+            longitude: state[5],
+            track: state[10] || 0 // True track in degrees
+          }));
+          
+        return flights.length > 0 ? flights : this.getMockFlightDataSync();
+      })
+    );
+  }
+  
+  
+  private getMockFlightDataSync(): FlightData[] {
+    // Fallback mock flight data when real API is unavailable
     const mockFlights: FlightData[] = [];
     
     for (let i = 0; i < 8; i++) {
@@ -109,13 +151,13 @@ export class GlobalDataService {
         country: ['United States', 'Canada', 'United Kingdom', 'Germany', 'France'][Math.floor(Math.random() * 5)],
         altitude: Math.floor(Math.random() * 12000) + 3000, // 3000-15000m
         velocity: Math.floor(Math.random() * 300) + 200, // 200-500 m/s
-        latitude: 37.7749 + (Math.random() - 0.5) * 10, // Around SF
-        longitude: -122.4194 + (Math.random() - 0.5) * 10,
+        latitude: 37.7749 + (Math.random() - 0.5) * 2, // Around SF Bay Area
+        longitude: -122.4194 + (Math.random() - 0.5) * 2,
         track: Math.floor(Math.random() * 360)
       });
     }
 
-    return of(mockFlights);
+    return mockFlights;
   }
 
   private fetchLatestNews(): Observable<NewsItem[]> {
