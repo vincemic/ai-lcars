@@ -5,84 +5,71 @@ test.describe('LCARS Dashboard - Status Display', () => {
     await page.goto('/');
   });
 
-  test('should display bridge operations status', async ({ page }) => {
-    await expect(page.locator('.lcars-screen-header').filter({ hasText: 'BRIDGE OPERATIONS STATUS' })).toBeVisible();
+  test('should display space operations status', async ({ page }) => {
+    await expect(page.locator('.lcars-screen-header').filter({ hasText: 'SPACE OPERATIONS STATUS' })).toBeVisible();
   });
 
-  test('should display all system status indicators', async ({ page }) => {
-    const statusItems = [
-      'WARP CORE',
-      'SHIELDS', 
-      'LIFE SUPPORT',
-      'IMPULSE ENGINES'
-    ];
-
-    for (const statusLabel of statusItems) {
-      await expect(page.locator('.status-label').filter({ hasText: statusLabel })).toBeVisible();
-      
-      // Check that each status has an indicator
-      const statusItem = page.locator('.status-item').filter({ 
-        has: page.locator('.status-label').filter({ hasText: statusLabel })
-      });
-      await expect(statusItem.locator('.status-indicator')).toBeVisible();
-      await expect(statusItem.locator('.status-value')).toBeVisible();
-    }
+  test('should display real-time data sections', async ({ page }) => {
+    // Check for ISS tracking section
+    await expect(page.locator('h3').filter({ hasText: 'ISS TRACKING' })).toBeVisible();
+    
+    // Check for astronauts section  
+    await expect(page.locator('h3').filter({ hasText: 'ASTRONAUTS IN SPACE' })).toBeVisible();
+    
+    // Check for upcoming launches section
+    await expect(page.locator('h3').filter({ hasText: 'UPCOMING LAUNCHES' })).toBeVisible();
   });
 
-  test('should display sensor readings', async ({ page }) => {
-    await expect(page.locator('h3').filter({ hasText: 'SENSOR READINGS' })).toBeVisible();
+  test('should display navigation sections', async ({ page }) => {
+    // Test switching to different sections
+    await page.locator('.lcars-button').filter({ hasText: 'ENVIRONMENT' }).click();
+    await expect(page.locator('.lcars-screen-header').filter({ hasText: 'ENVIRONMENT OPERATIONS STATUS' })).toBeVisible();
     
-    // Check for temperature reading
-    await expect(page.locator('.data-line').filter({ hasText: 'Temperature:' })).toBeVisible();
+    await page.locator('.lcars-button').filter({ hasText: 'COMMUNICATIONS' }).click();
+    await expect(page.locator('.lcars-screen-header').filter({ hasText: 'COMMUNICATIONS OPERATIONS STATUS' })).toBeVisible();
     
-    // Check for hull integrity
-    await expect(page.locator('.data-line').filter({ hasText: 'Hull Integrity:' })).toBeVisible();
-    
-    // Check for power levels
-    await expect(page.locator('.data-line').filter({ hasText: 'Power Levels:' })).toBeVisible();
+    // Switch back to space
+    await page.locator('.lcars-button').filter({ hasText: 'SPACE' }).click();
+    await expect(page.locator('.lcars-screen-header').filter({ hasText: 'SPACE OPERATIONS STATUS' })).toBeVisible();
   });
 
-  test('should display crew status information', async ({ page }) => {
-    await expect(page.locator('h3').filter({ hasText: 'CREW STATUS' })).toBeVisible();
+  test('should display ISS position data', async ({ page }) => {
+    // Check for ISS position display in left panel
+    await expect(page.locator('.lcars-text-display').filter({ hasText: 'ISS POSITION' })).toBeVisible();
     
-    // Check for personnel count
-    await expect(page.locator('.data-line').filter({ hasText: 'Personnel:' })).toBeVisible();
+    // Check that coordinates are displayed (should have both latitude and longitude)
+    const coordinates = page.locator('.lcars-text-display').filter({ hasText: 'ISS POSITION' }).locator('.lcars-data');
+    const coordinateCount = await coordinates.count();
+    expect(coordinateCount).toBe(2); // Latitude and longitude
     
-    // Check for on duty count
-    await expect(page.locator('.data-line').filter({ hasText: 'On Duty:' })).toBeVisible();
-    
-    // Check for medical status
-    await expect(page.locator('.data-line').filter({ hasText: 'Medical:' })).toBeVisible();
+    // Check that both coordinates are visible
+    await expect(coordinates.first()).toBeVisible();
+    await expect(coordinates.last()).toBeVisible();
   });
 
-  test('sensor readings should have valid values', async ({ page }) => {
-    // Temperature should be a number with °C
-    const tempValue = page.locator('.data-line').filter({ hasText: 'Temperature:' }).locator('.data-value');
-    const tempText = await tempValue.textContent();
-    expect(tempText).toMatch(/^\d+°C$/);
+  test('stardate should update periodically', async ({ page }) => {
+    // Get initial stardate from the specific stardate display
+    const stardateElement = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' }).locator('.lcars-data');
+    const initialStardate = await stardateElement.textContent();
     
-    // Hull integrity should be a percentage
-    const hullValue = page.locator('.data-line').filter({ hasText: 'Hull Integrity:' }).locator('.data-value');
-    const hullText = await hullValue.textContent();
-    expect(hullText).toMatch(/^\d+%$/);
+    // Wait for stardate to update (updates every 5 seconds)
+    await page.waitForTimeout(6000);
     
-    // Power levels should be a percentage
-    const powerValue = page.locator('.data-line').filter({ hasText: 'Power Levels:' }).locator('.data-value');
-    const powerText = await powerValue.textContent();
-    expect(powerText).toMatch(/^\d+%$/);
+    const updatedStardate = await stardateElement.textContent();
+    expect(updatedStardate).not.toBe(initialStardate);
+    expect(updatedStardate).toMatch(/^\d+\.\d+$/);
   });
 
-  test('dynamic data should update periodically', async ({ page }) => {
-    // Get initial temperature
-    const tempElement = page.locator('.data-line').filter({ hasText: 'Temperature:' }).locator('.data-value');
-    const initialTemp = await tempElement.textContent();
+  test('real-time data should be present', async ({ page }) => {
+    // Wait a moment for data to load
+    await page.waitForTimeout(2000);
     
-    // Wait for data to update (updates every 3 seconds)
-    await page.waitForTimeout(4000);
+    // Check that ISS data is being displayed
+    const issSection = page.locator('h3').filter({ hasText: 'ISS TRACKING' });
+    await expect(issSection).toBeVisible();
     
-    const updatedTemp = await tempElement.textContent();
-    // Temperature might be the same, but we're testing that the mechanism works
-    // The actual change depends on random values, so we just verify the format is still correct
-    expect(updatedTemp).toMatch(/^\d+°C$/);
+    // Check that the data grid contains panels
+    const dataPanels = page.locator('.data-panel');
+    await expect(dataPanels.first()).toBeVisible();
   });
 });

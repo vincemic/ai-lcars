@@ -47,7 +47,7 @@ export class LCARSPage {
     this.navigationButtons = page.locator('.lcars-button');
     this.activeNavigationButton = page.locator('.lcars-button.active');
     this.stardateDisplay = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' });
-    this.stardateValue = page.locator('.lcars-data');
+    this.stardateValue = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' }).locator('.lcars-data');
     
     // Status display
     this.statusScreen = page.locator('.lcars-screen');

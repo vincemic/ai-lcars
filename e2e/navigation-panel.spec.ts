@@ -7,13 +7,13 @@ test.describe('LCARS Dashboard - Navigation Panel', () => {
 
   test('should display all navigation buttons', async ({ page }) => {
     const navigationButtons = [
+      'SPACE',
+      'ENVIRONMENT', 
       'NAVIGATION',
-      'SENSORS', 
-      'TACTICAL',
+      'COMMUNICATIONS',
+      'ECONOMICS',
       'ENGINEERING',
-      'MEDICAL',
-      'SCIENCE',
-      'COMMUNICATIONS'
+      'MEDICAL'
     ];
 
     for (const buttonText of navigationButtons) {
@@ -21,26 +21,26 @@ test.describe('LCARS Dashboard - Navigation Panel', () => {
     }
   });
 
-  test('should have navigation button as active by default', async ({ page }) => {
-    await expect(page.locator('.lcars-button.active').filter({ hasText: 'NAVIGATION' })).toBeVisible();
+  test('should have space button as active by default', async ({ page }) => {
+    await expect(page.locator('.lcars-button.active').filter({ hasText: 'SPACE' })).toBeVisible();
   });
 
   test('navigation buttons should be clickable', async ({ page }) => {
-    const sensorsButton = page.locator('.lcars-button').filter({ hasText: 'SENSORS' });
-    await expect(sensorsButton).toBeVisible();
+    const environmentButton = page.locator('.lcars-button').filter({ hasText: 'ENVIRONMENT' });
+    await expect(environmentButton).toBeVisible();
     
-    // Click the sensors button
-    await sensorsButton.click();
+    // Click the environment button
+    await environmentButton.click();
     
-    // Verify the button is clickable (even if no visual change occurs yet)
-    await expect(sensorsButton).toBeVisible();
+    // Verify the button becomes active
+    await expect(environmentButton).toHaveClass(/active/);
   });
 
   test('should display stardate information', async ({ page }) => {
     await expect(page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' })).toBeVisible();
     
-    // Check that stardate value is displayed
-    const stardateValue = page.locator('.lcars-data');
+    // Check that stardate value is displayed using a more specific selector
+    const stardateValue = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' }).locator('.lcars-data');
     await expect(stardateValue).toBeVisible();
     
     // Verify stardate format (should be a number with decimal)
@@ -49,7 +49,7 @@ test.describe('LCARS Dashboard - Navigation Panel', () => {
   });
 
   test('stardate should update periodically', async ({ page }) => {
-    const stardateElement = page.locator('.lcars-data');
+    const stardateElement = page.locator('.lcars-text-display').filter({ hasText: 'STARDATE' }).locator('.lcars-data');
     const initialStardate = await stardateElement.textContent();
     
     // Wait for stardate to update (it updates every 5 seconds)

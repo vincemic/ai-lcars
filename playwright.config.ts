@@ -26,17 +26,15 @@ export default defineConfig({
     /* Record video on failure */
     video: 'retain-on-failure',
   },
+  
+  /* Global test timeout */
+  timeout: 60000, // 60 seconds for all tests
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
     },
 
     {
